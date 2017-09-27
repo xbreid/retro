@@ -1,22 +1,17 @@
 import React from 'react';
 import Auth from '../../auth/Auth';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 
 import RaisedButton from 'material-ui/RaisedButton';
 
 // styling
-import './style.scss';
+//import './style.scss';
 
 const auth = new Auth();
 
-export default class Vault extends React.Component {
-  constructor(props) {
-    super(props);
-
-  }
-
-
+export default class Notes extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  // }
 
   logout() {
     auth.logout();
@@ -35,17 +30,14 @@ export default class Vault extends React.Component {
     };
 
     return (
-      <div>
-        <div style={style}>
-          Vault
+      <div style={style}>
+        Notes
         {
           auth.isAuthenticated() && (
             <RaisedButton label="Logout" primary={true} style={button} onClick={this.logout.bind(this)} />
           )
         }
-        </div>
       </div>
     );
   }
 }
-
