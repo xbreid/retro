@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import Nav from './shared/nav';
 
 //styles
 import './App.scss';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {navOpen: true}
@@ -15,10 +13,6 @@ class App extends Component {
 
   toggleNav = (e) => {
     this.setState({navOpen: !this.state.navOpen});
-  };
-
-  hideNav = (e) => {
-    this.setState({navOpen: true})
   };
 
   render() {
@@ -33,7 +27,4 @@ class App extends Component {
       </MuiThemeProvider>
     );
   }
-
 }
-
-export default App;

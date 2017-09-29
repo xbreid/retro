@@ -3,6 +3,7 @@ import CryptoJS from 'crypto-js';
 import KeyGen from 'generate-password';
 import Auth from '../../auth/Auth';
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 // styling
 import './style.scss';
@@ -19,35 +20,6 @@ export default class Home extends React.Component {
     auth.login();
   }
 
-  logout() {
-    auth.logout();
-  }
-
-  message() {
-    console.log(CryptoJS.SHA256("password").toString());
-
-    let salt = CryptoJS.lib.WordArray.random(128/8);
-
-    console.log(salt.toString());
-
-    let password = KeyGen.generate({
-      length: 64,
-      numbers: true,
-      symbols: true,
-      uppercase: true,
-      strict: true
-    });
-
-    console.log(password);
-
-    let key = CryptoJS.PBKDF2("password", salt, {
-      keySize: 256/32,
-      iterations: 5000
-    });
-
-    console.log(key.toString());
-  }
-
   render() {
 
     const style = {
@@ -56,7 +28,7 @@ export default class Home extends React.Component {
 
     return (
       <div>
-        Home Page {this.message()}
+        Home Page --
         <RaisedButton label="Login" primary={true} style={style} onClick={this.login.bind(this)} />
       </div>
     );

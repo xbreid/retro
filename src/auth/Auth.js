@@ -1,5 +1,4 @@
 import auth0 from 'auth0-js';
-import history from '../history';
 
 export default class Auth {
 
@@ -17,12 +16,27 @@ export default class Auth {
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.getProfile = this.getProfile.bind(this);
   }
 
-  requireAuth() {
-    if (!this.isAuthenticated()) {
-      history.replace('/');
+  userProfile;
+
+  getProfile(cb) {
+    let accessToken = this.getAccessToken();
+    this.auth0.client.userInfo(accessToken, (err, profile) => {
+      if (profile) {
+        this.userProfile = profile;
+      }
+      cb(err, profile);
+    });
+  }
+
+  getAccessToken() {
+    const accessToken = localStorage.getItem('access_token');
+    if (!accessToken) {
+      throw new Error('No access token found');
     }
+    return accessToken;
   }
 
   handleAuthentication() {
@@ -68,5 +82,32 @@ export default class Auth {
   login() {
     this.auth0.authorize();
   }
+
+  // an attempt to use a custom login form
+  // was going to try to use this to hash password before they went to Auth0 server
+  // but they already do that, so whats the point
+  // login(email, password) {
+  //   this.auth0.login({
+  //     realm: 'Username-Password-Authentication',
+  //     username: email,
+  //     password: password,
+  //     scope: 'openid profile email'
+  //   }, (err, authResult) => {
+  //     if (err){
+  //       console.error(err);
+  //     }else{
+  //       console.log("authenticated");
+  //       this.local.set('id_token', authResult.idToken);
+  //
+  //       // Fetch profile information
+  //       this.auth0.getProfile(authResult.idToken, (error, profile) => {
+  //         if (error) {
+  //           console.error(error);
+  //         }
+  //         console.log(profile);
+  //       });
+  //     }
+  //   });
+  // }
 
 }

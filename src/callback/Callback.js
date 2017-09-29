@@ -3,7 +3,7 @@ import Auth from '../auth/Auth';
 
 const auth = new Auth();
 
-class Callback extends Component {
+export default class Callback extends Component {
 
   componentDidMount() {
     auth.handleAuthentication();
@@ -13,5 +13,3 @@ class Callback extends Component {
     return null;
   }
 }
-
-export default Callback;

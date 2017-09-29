@@ -9,9 +9,15 @@ import RaisedButton from 'material-ui/RaisedButton';
 const auth = new Auth();
 
 export default class Notes extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    localStorage.removeItem('reactpm_id');
+    localStorage.removeItem('ReactPM_ID');
+    localStorage.removeItem('dk');
+  }
 
   logout() {
     auth.logout();
