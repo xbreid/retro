@@ -4,11 +4,11 @@ export default class Auth {
 
   auth0 = new auth0.WebAuth({
     domain: 'reactpm.auth0.com',
-    clientID: 'pD1q0qTemM31jhJ-tUIOczFZaRjwyjZ2',
+    clientID: 'aWZOYGdXcmJiFCJFEiLyM67HfFvuq03I',
     redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://reactpm.auth0.com/userinfo',
+    audience: 'https://reactpm.com',
     responseType: 'token id_token',
-    scope: 'openid profile email'
+    scope: 'openid profile email read:authstatus'
   });
 
   constructor() {

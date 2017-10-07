@@ -4,6 +4,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import CryptoJS from 'crypto-js';
 import KeyGen from 'generate-password';
 import UUIDv4 from 'uuid/v4';
+import axios from 'axios';
+
+import { getAccessToken } from '../../auth/AuthService';
 
 // styling
 import './style.scss';
@@ -24,7 +27,6 @@ export default class Vault extends React.Component {
     }
   }
 
-  // TODO: how does the decryption key go comp to comp?
   getRpmId(userId) {
     const rpmId = localStorage.getItem(REACTPM_ID_KEY);
     if (!rpmId) {
@@ -68,6 +70,16 @@ export default class Vault extends React.Component {
       this.setState({ profile: userProfile });
     }
 
+    axios.get('http://localhost:3000/authorized',
+      { headers: { Authorization: `Bearer ${getAccessToken()}` }})
+      .then(function(response) {
+        console.log(response.data);
+        console.log(response.status);
+        console.log(response.statusText);
+        console.log(response.headers);
+        console.log(response.config);
+      });
+
     // let password = KeyGen.generate({
     //   length: 64,
     //   numbers: true,
@@ -99,9 +111,8 @@ export default class Vault extends React.Component {
     return (
       <div>
         <div style={style}>
-          Vault
-          {this.state.authId} ---
-          {this.state.rpmId}
+          Vault --
+          {this.state.authId}
           {
             auth.isAuthenticated() && (
               <RaisedButton label="Logout" primary={true} style={button} onClick={this.logout.bind(this)} />
