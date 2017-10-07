@@ -1,16 +1,17 @@
 var RecordModel = require("../models/recordmodel");
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
+var dotenv = require('dotenv').config();
 
 var jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: "https://reactpm.auth0.com/.well-known/jwks.json"
+    jwksUri: process.env.AUTH0_API_JWKSURI
   }),
-  audience: 'https://reactpm.com',
-  issuer: "https://reactpm.auth0.com/",
+  audience: process.env.AUTH0_API_AUDIENCE,
+  issuer: process.env.AUTH0_API_ISSUER,
   algorithms: ['RS256']
 });
 

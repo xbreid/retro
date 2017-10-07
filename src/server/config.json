@@ -1,6 +1,5 @@
 {
   "couchbase": {
-    "server": "couchbase://reactpm.com",
-    "bucket": "default"
+    "server": "couchbase://reactpm.com"
   }
 }

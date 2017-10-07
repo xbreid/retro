@@ -3,12 +3,12 @@ import auth0 from 'auth0-js';
 export default class Auth {
 
   auth0 = new auth0.WebAuth({
-    domain: 'reactpm.auth0.com',
-    clientID: 'aWZOYGdXcmJiFCJFEiLyM67HfFvuq03I',
-    redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://reactpm.com',
-    responseType: 'token id_token',
-    scope: 'openid profile email read:authstatus'
+    domain: process.env.REACT_APP_AUTH0_DOMAIN,
+    clientID: process.env.REACT_APP_AUTH0_CLIENTID,
+    redirectUri: process.env.REACT_APP_AUTH0_REDIRECTURI,
+    audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+    responseType: process.env.REACT_APP_AUTH0_RESPONSETYPE,
+    scope: process.env.REACT_APP_AUTH0_SCOPE
   });
 
   constructor() {
