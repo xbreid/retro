@@ -11,7 +11,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 module.exports.bucket = (
-  new couchbase.Cluster(config.couchbase.server)).openBucket(process.env.BUCKET);
+  new couchbase.Cluster(config.couchbase.server))
+  .openBucket(process.env.BUCKET, process.env.BUCKET_PASS, function(err) {
+    if (err) {
+      console.error('Database connection error: %j', err);
+    }
+});
 
 app.use(express.static(path.resolve('build')));
 
