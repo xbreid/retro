@@ -1,9 +1,9 @@
-var RecordModel = require("../models/recordmodel");
-var jwt = require('express-jwt');
-var jwks = require('jwks-rsa');
-var dotenv = require('dotenv').config();
+let RecordModel = require("../models/recordmodel");
+let jwt = require('express-jwt');
+let jwks = require('jwks-rsa');
+let dotenv = require('dotenv').config();
 
-var jwtCheck = jwt({
+let jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -15,7 +15,37 @@ var jwtCheck = jwt({
   algorithms: ['RS256']
 });
 
-var appRouter = function(app) {
+let appRouter = function(app) {
+
+  app.post("/api/save", function(req, res) {
+    if(!req.body.email) {
+      return res.status(400).send({"status": "error", "message": "A email is required"});
+    }
+    RecordModel.save(req.body, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
+
+  app.get("/api/checkId", jwtCheck, function(req, res) {
+    RecordModel.checkId(req.query.id, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
+
+  app.get("/api/getVaultByEmail", jwtCheck, function(req, res) {
+    RecordModel.getVaultByEmail(req.query.email, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
 
   /*app.post("/api/delete", function(req, res) {
     if(!req.body.document_id) {

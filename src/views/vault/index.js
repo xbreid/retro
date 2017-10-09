@@ -13,7 +13,6 @@ import './style.scss';
 
 const auth = new Auth();
 const REACTPM_ID_KEY = 'reactpm_id';
-const REACTPM_DK_KEY = 'reactpm_dk';
 
 export default class Vault extends React.Component {
   constructor(props) {
@@ -23,24 +22,41 @@ export default class Vault extends React.Component {
       profile: {},
       authId: '',
       email: '',
-      rpmId: '',
+      RpmID: '',
     }
   }
 
-  getRpmId(userId) {
+  configRpmID(email, email_verified) {
     const rpmId = localStorage.getItem(REACTPM_ID_KEY);
     if (!rpmId) {
       let rpmId = UUIDv4();
-      localStorage.setItem(REACTPM_ID_KEY, rpmId);
 
-      // let salt = CryptoJS.lib.WordArray.random(128/8);
-      // console.log(salt.toString());
-
-      // let key = CryptoJS.PBKDF2(password + username, salt, {
-      //   keySize: 256/32,
-      //   iterations: 5000
+      // axios.post('http://localhost:3000/api/save', {
+      //   //headers: { Authorization: `Bearer ${getAccessToken()}` },
+      //   data: {
+      //     email: email,
+      //     email_verified: email_verified,
+      //     document_id: rpmId
+      //   }
       // });
-      // console.log(key.toString());
+
+
+      axios.get('http://localhost:3000/api/checkId', {
+        headers: { Authorization: `Bearer ${getAccessToken()}` },
+        params: { id: rpmId }
+      })
+      .then(function(response) {
+        console.log(response.data);
+        console.log(response.status);
+        console.log(response.statusText);
+        console.log(response.headers);
+        console.log(response.config);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+      localStorage.setItem(REACTPM_ID_KEY, rpmId);
     }
     return rpmId;
   }
@@ -53,11 +69,10 @@ export default class Vault extends React.Component {
         this.setState({ profile });
         this.setState({ authId: profile.sub.substr(6) });
         this.setState({ email: profile.email });
-        //this.setState({ rpmId: this.getRpmId(profile.sub.substr(6)) });
+        this.setState({ email_verified: profile.email });
+        this.setState({ rpmId: this.configRpmID(profile.email, profile.email_verified )});
         console.log(profile);
-        console.log(profile.user_metadata);
 
-        // fetch vault from database
         // if vault is empty create new vault
 
         let ciphertext = CryptoJS.AES.encrypt('password', profile.sub.substr(6));
@@ -70,25 +85,32 @@ export default class Vault extends React.Component {
       this.setState({ profile: userProfile });
     }
 
-    axios.get('http://localhost:3000/authorized',
-      { headers: { Authorization: `Bearer ${getAccessToken()}` }})
-      .then(function(response) {
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.statusText);
-        console.log(response.headers);
-        console.log(response.config);
-      });
+    // fetch vault from database
+    axios.get('http://localhost:3000/api/getVaultByEmail', {
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
+      params: { email: 'user1@foo.com' }
+    })
+    .then(function(response) {
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.statusText);
+      console.log(response.headers);
+      console.log(response.config);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-    // let password = KeyGen.generate({
-    //   length: 64,
-    //   numbers: true,
-    //   symbols: true,
-    //   uppercase: true,
-    //   strict: true
-    // });
-    //
-    // console.log(password);
+    axios.get('http://localhost:3000/authorized', {
+      headers: { Authorization: `Bearer ${getAccessToken()}` }
+    })
+    .then(function(response) {
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.statusText);
+      console.log(response.headers);
+      console.log(response.config);
+    });
 
   }
 

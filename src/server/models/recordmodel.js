@@ -1,9 +1,62 @@
-var uuid = require("uuid");
-var db = require("../index").bucket;
-var config = require("../config");
-var N1qlQuery = require('couchbase').N1qlQuery;
+let uuid = require("uuid");
+let db = require("../index").bucket;
+let config = require("../config");
+let couchbase = require("couchbase");
+let dotenv = require('dotenv').config();
 
-function RecordModel() { };
+function RecordModel() { }
+
+let N1qlQuery = couchbase.N1qlQuery;
+
+RecordModel.save = function(data, callback) {
+  let jsonObject = {
+    email: data.email,
+    email_verified: data.email_verified
+  };
+
+  let documentId = data.document_id ? data.document_id : uuid.v4();
+  db.upsert(documentId, jsonObject, function(error, result) {
+    if(error) {
+      callback(error, null);
+      return;
+    }
+    callback(null, {message: "success", data: result});
+  });
+};
+
+RecordModel.checkId = function(id, callback) {
+  db.get(id, function(err, result) {
+    if (err) {
+      if (err.code == couchbase.errors.keyNotFound) {
+        console.log('Key does not exist');
+        return callback(err, null);
+      } else {
+        console.log('Some other error occurred: %j', err);
+        return callback(err, null);
+      }
+    } else {
+      console.log('Retrieved document with value: %j', result.value);
+      console.log('CAS is %j', result.cas);
+      callback(null, result);
+    }
+  });
+};
+
+RecordModel.getVaultByEmail = function(email, callback) {
+  console.log(email);
+  console.log(process.env.BUCKET_QUERY);
+  var statement = "select * from `retro` where email = 'user1@foo.com';";
+  console.log(statement);
+  var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
+  console.log(query);
+  db.query(query, function(error, result) {
+    if(error) {
+      console.log("error with query");
+      return callback(error, null);
+    }
+    callback(null, result);
+  });
+};
 
 /*RecordModel.delete = function(documentId, callback) {
   db.remove(documentId, function(error, result) {

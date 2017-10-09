@@ -1,11 +1,11 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var couchbase = require("couchbase");
-var path = require("path");
-var config = require("./config");
-var dotenv = require('dotenv').config();
+let express = require("express");
+let bodyParser = require("body-parser");
+let couchbase = require("couchbase");
+let path = require("path");
+let config = require("./config");
+let dotenv = require('dotenv').config();
 
-var app = express();
+let app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,8 +20,8 @@ module.exports.bucket = (
 
 app.use(express.static(path.resolve('build')));
 
-var routes = require("./routes/routes.js")(app);
+let routes = require("./routes/routes.js")(app);
 
-var server = app.listen(process.env.PORT, function () {
+let server = app.listen(process.env.PORT, function () {
   console.log("Listening on port %s...", server.address().port);
 });
