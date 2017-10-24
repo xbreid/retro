@@ -23,11 +23,11 @@ export default class Home extends React.Component {
   render() {
 
     const style = {
-      margin: 12,
+      marginTop: 60
     };
 
     return (
-      <div>
+      <div style={style}>
         Home Page --
         <RaisedButton label="Login" primary={true} style={style} onClick={this.login.bind(this)} />
       </div>
