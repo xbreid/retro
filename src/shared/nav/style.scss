@@ -1,0 +1,27 @@
+@import "../variables";
+
+
+.top-bar-nav {
+  height: 40px;
+  background-color: #607D8B;
+  display: flex;
+  color: rgb(255, 255, 255);
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 1101;
+}
+
+.logo-nav {
+  margin: 20px 15px;
+  font-size: 24px;
+  color: #f3f3f3;
+  font-weight: 100;
+}
+
+.name {
+  font-size: 18px;
+  padding: 10px;
+}
