@@ -83,31 +83,4 @@ export default class Auth {
     this.auth0.authorize();
   }
 
-  // an attempt to use a custom login form
-  // was going to try to use this to hash password before they went to Auth0 server
-  // but they already do that, so whats the point
-  // login(email, password) {
-  //   this.auth0.login({
-  //     realm: 'Username-Password-Authentication',
-  //     username: email,
-  //     password: password,
-  //     scope: 'openid profile email'
-  //   }, (err, authResult) => {
-  //     if (err){
-  //       console.error(err);
-  //     }else{
-  //       console.log("authenticated");
-  //       this.local.set('id_token', authResult.idToken);
-  //
-  //       // Fetch profile information
-  //       this.auth0.getProfile(authResult.idToken, (error, profile) => {
-  //         if (error) {
-  //           console.error(error);
-  //         }
-  //         console.log(profile);
-  //       });
-  //     }
-  //   });
-  // }
-
 }
