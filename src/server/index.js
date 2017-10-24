@@ -22,6 +22,6 @@ app.use(express.static(path.resolve('build')));
 
 let routes = require("./routes/routes.js")(app);
 
-let server = app.listen(process.env.PORT, function () {
+let server = app.listen(process.env.SERVER_PORT, function () {
   console.log("Listening on port %s...", server.address().port);
 });

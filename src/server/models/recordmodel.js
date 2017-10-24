@@ -11,10 +11,10 @@ let N1qlQuery = couchbase.N1qlQuery;
 RecordModel.save = function(data, callback) {
   let jsonObject = {
     email: data.email,
-    email_verified: data.email_verified
+    vault: data.vault
   };
 
-  let documentId = data.document_id ? data.document_id : uuid.v4();
+  let documentId = data.docId ? data.docId : uuid.v4();
   db.upsert(documentId, jsonObject, function(error, result) {
     if(error) {
       callback(error, null);
@@ -42,13 +42,45 @@ RecordModel.checkId = function(id, callback) {
   });
 };
 
+RecordModel.getDocIdByEmail = function(email, callback) {
+  let statement = "select meta("+process.env.BUCKET_QUERY+").id from `"+process.env.BUCKET_QUERY+"` where email = '"+email+"';";
+  let query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
+  db.query(query, function (error, result) {
+    if(error) {
+      console.log("error with query");
+      return callback(error, null);
+    }
+    callback(null, result);
+  })
+};
+
 RecordModel.getVaultByEmail = function(email, callback) {
-  console.log(email);
-  console.log(process.env.BUCKET_QUERY);
-  var statement = "select * from `retro` where email = 'user1@foo.com';";
-  console.log(statement);
+  var statement = "select * from `"+process.env.BUCKET_QUERY+"` where email = '"+email+"';";
   var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
-  console.log(query);
+  db.query(query, function(error, result) {
+    if(error) {
+      console.log("error with query");
+      return callback(error, null);
+    }
+    callback(null, result);
+  });
+};
+
+RecordModel.getSitesByEmail = function(email, callback) {
+  var statement = "select vault.sites from `"+process.env.BUCKET_QUERY+"` where email = '"+email+"';";
+  var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
+  db.query(query, function(error, result) {
+    if(error) {
+      console.log("error with query");
+      return callback(error, null);
+    }
+    callback(null, result);
+  });
+};
+
+RecordModel.getNotesByEmail = function(email, callback) {
+  var statement = "select vault.notes from `"+process.env.BUCKET_QUERY+"` where email = '"+email+"';";
+  var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
   db.query(query, function(error, result) {
     if(error) {
       console.log("error with query");

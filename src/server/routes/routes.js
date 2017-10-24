@@ -17,10 +17,7 @@ let jwtCheck = jwt({
 
 let appRouter = function(app) {
 
-  app.post("/api/save", function(req, res) {
-    if(!req.body.email) {
-      return res.status(400).send({"status": "error", "message": "A email is required"});
-    }
+  app.post("/api/save", jwtCheck, function(req, res) {
     RecordModel.save(req.body, function(error, result) {
       if(error) {
         return res.status(400).send(error);
@@ -38,8 +35,35 @@ let appRouter = function(app) {
     });
   });
 
+  app.get("/api/getDocIdByEmail", jwtCheck, function(req, res) {
+    RecordModel.getDocIdByEmail(req.query.email, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
+
   app.get("/api/getVaultByEmail", jwtCheck, function(req, res) {
     RecordModel.getVaultByEmail(req.query.email, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
+
+  app.get("/api/getSitesByEmail", jwtCheck, function(req, res) {
+    RecordModel.getSitesByEmail(req.query.email, function(error, result) {
+      if(error) {
+        return res.status(400).send(error);
+      }
+      res.send(result);
+    });
+  });
+
+  app.get("/api/getNotesByEmail", jwtCheck, function(req, res) {
+    RecordModel.getNotesByEmail(req.query.email, function(error, result) {
       if(error) {
         return res.status(400).send(error);
       }
@@ -59,7 +83,7 @@ let appRouter = function(app) {
     });
   });*/
 
-  app.get('/authorized', jwtCheck, function (req, res) {
+  app.get('/api/authorized', jwtCheck, function (req, res) {
     console.log('auth secured');
     res.send('Secured Resource');
   });
