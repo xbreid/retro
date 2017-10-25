@@ -18,7 +18,6 @@ export default class AddSiteModal extends React.Component {
       name: '',
       username: '',
       password: '',
-      docId: '',
       siteId: 0,
 
     };
@@ -28,7 +27,6 @@ export default class AddSiteModal extends React.Component {
 
   componentDidMount() {
     this.setState({ siteId: this.props.siteId });
-    this.setState({ docId: this.props.docId });
   }
 
   addSiteToVault() {
@@ -45,7 +43,6 @@ export default class AddSiteModal extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      docId: nextProps.docId,
       siteId: nextProps.siteId
     });
   }
@@ -69,9 +66,11 @@ export default class AddSiteModal extends React.Component {
     this.setState({ name: '' });
     this.setState({ username: '' });
     this.setState({ password: '' });
+    this.setState({ error: '' });
   }
 
   handleClose = () => {
+    this.clearStates();
     this.setState({open: false});
   };
 
