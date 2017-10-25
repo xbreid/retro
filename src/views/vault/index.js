@@ -2,11 +2,20 @@ import React from 'react';
 import Auth from '../../auth/Auth';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
-import { getAccessToken } from '../../auth/AuthService';
+import { getAccessToken, isLoggedIn } from '../../auth/AuthService';
 import AddSiteModal from '../components/add_site';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+
+import EyeIcon from 'react-icons/lib/md/remove-red-eye';
+import ControlIcon from 'react-icons/lib/md/keyboard-control';
+import TrashIcon from 'react-icons/lib/fa/trash';
+import IconButton from 'material-ui/IconButton';
 
 // styling
 import './style.scss';
+import EditSiteModal from "../components/edit_site";
+import DeleteSiteAlert from "../components/delete_alert/index";
 
 // auth connection
 const auth = new Auth();
@@ -22,11 +31,16 @@ export default class Vault extends React.Component {
       docId: '',
       authId: '',
       email: '',
-      RpmID: '',
-      recentSiteId: 0
+      recentSiteId: 0,
+      editSiteOpen: false,
+      editSite: {},
+      deleteAlertOpen: false
     };
 
+    this.deleteSiteFromVault = this.deleteSiteFromVault.bind(this);
     this.addSiteToVault = this.addSiteToVault.bind(this);
+    this.onViewClick = this.onViewClick.bind(this);
+    this.onTrashClick = this.onTrashClick.bind(this);
   }
 
   componentDidMount() {
@@ -52,6 +66,7 @@ export default class Vault extends React.Component {
   }
 
   getVault(email) {
+    console.log(email);
     // fetch vault from database
     axios.get('api/getVaultByEmail', {
       headers: { Authorization: `Bearer ${getAccessToken()}` },
@@ -73,8 +88,8 @@ export default class Vault extends React.Component {
     })
       .then(({ data })=> {
         console.log(data);
-        data.map(function (m) {
-          return(this.setState({ docId: m.id }));
+        data.map(function (doc) {
+          return(this.setState({ docId: doc.id }));
         }, this)
       })
       .catch((err)=> {
@@ -87,7 +102,7 @@ export default class Vault extends React.Component {
       email: this.state.email,
       vault: vault,
       docId: this.state.docId
-    })
+    }, { headers: { Authorization: `Bearer ${getAccessToken()}` }})
       .then(function (response) {
         console.log(response);
       })
@@ -110,40 +125,57 @@ export default class Vault extends React.Component {
   }
 
   initSiteData(data) {
-    data.map(function(m) {
-      let bytes  = CryptoJS.AES.decrypt(m.retro.vault, this.state.authId);
-      m.retro.vault = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-      console.log(m.retro.vault);
-      console.log(data);
-      this.setRecentSiteId(m.retro.vault.sites);
-
+    data.map(function(doc) {
+      if (doc.retro.vault !== "empty") {
+        let bytes = CryptoJS.AES.decrypt(doc.retro.vault, this.state.authId);
+        doc.retro.vault = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        console.log(doc.retro.vault);
+        console.log(data);
+        this.setRecentSiteId(doc.retro.vault.sites);
+      } else {
+        doc.retro.vault = { notes: [], sites: [] };
+      }
       return(this.setState({ data: data }));
     }, this)
   }
 
   addSiteToVault(site) {
-    this.state.data.map(function(m, i) {
-      for (i = 0; i < m.retro.vault.sites.length; i++) {
-        if (site.id === m.retro.vault.sites[i].id) {
-          return false;
+    this.state.data.map(function(doc, index) {
+      for (index = 0; index < doc.retro.vault.sites.length; index++) {
+        if (site.id === doc.retro.vault.sites[index].id) {
+          doc.retro.vault.sites[index] = site;
+          this.setRecentSiteId(doc.retro.vault.sites);
+          this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
+          this.setState({ editSiteOpen: false });
+          this.setState({ editSite: {}});
+          return true;
         }
       }
-      m.retro.vault.sites.push(site);
-      console.log(m.retro.vault.sites);
-      console.log(m.retro.vault.sites.length);
-      this.setRecentSiteId(m.retro.vault.sites);
-
-      let ciphertext = CryptoJS.AES.encrypt(JSON.stringify(m.retro.vault), this.state.authId);
-      console.log(ciphertext);
-      let cipherstring = ciphertext.toString();
-      console.log(cipherstring);
-      this.upsertVaultToDb(cipherstring);
-
+      doc.retro.vault.sites.push(site);
+      console.log(doc.retro.vault.sites);
+      console.log(doc.retro.vault.sites.length);
+      this.setRecentSiteId(doc.retro.vault.sites);
+      this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
+      this.setState({ editSiteOpen: false });
+      this.setState({ editSite: {}});
       return true;
     }, this);
   }
 
+  deleteSiteFromVault(doc, index) {
+    doc.retro.vault.sites.splice(index, 1);
+    console.log(doc.retro.vault.sites);
+    this.setRecentSiteId(doc.retro.vault.sites);
+    this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
+  }
+
+  encryptedVault(vault, key) {
+    let cipherText = CryptoJS.AES.encrypt(JSON.stringify(vault), key);
+    console.log(cipherText);
+    let cipherString = cipherText.toString();
+    console.log(cipherString);
+    return cipherString;
+  }
 
   setRecentSiteId(sites) {
     if (sites.length !== 0) {
@@ -151,21 +183,55 @@ export default class Vault extends React.Component {
     }
   }
 
-  render() {
+  onViewClick(site) {
+    console.log(site);
+    this.setState({editSite: site});
+    this.setState({editSiteOpen: true});
+  }
 
-    const style = {
-      paddingTop: 100,
-      minHeight: 400,
-      paddingLeft: 256
-    };
+  onTrashClick(doc, index, cards) {
+    cards.splice(index, 1);
+    this.deleteSiteFromVault(doc, index);
+    this.forceUpdate();
+  }
+
+  render() {
+    const cardTitle = { fontSize: 18 };
+    const cardButtons = { float: 'right' };
+    let cards = [];
+
+    const cardSet = this.state.data.map(function (doc) {
+      doc.retro.vault.sites.map(function (site, index) {
+        let name = site.name;
+        let username = site.username;
+
+        if (username.length > 33) {
+          username = username.substr(0, 33) + "...";
+        }
+
+        cards.push(
+          <Card key={index} className="tile">
+            <CardTitle className="cardTitle" titleStyle={cardTitle} title={name} subtitle={username}/>
+            <CardActions className="cardActions">
+              <div style={cardButtons}>
+                <IconButton onClick={(e) => this.onViewClick(site)}><EyeIcon size="16"/></IconButton>
+                <IconButton onClick={(e) => this.onTrashClick(doc, index, cards)}><TrashIcon size="16"/></IconButton>
+              </div>
+            </CardActions>
+          </Card>
+        );
+        return true;
+      }, this);
+      return cards;
+    }, this);
 
     return (
       <div>
-        <div style={style}>
-          Vault -- Page
-          {this.state.recentSiteId}
+        <div className="vault">
+          {cardSet}
         </div>
-        <AddSiteModal addSite={this.addSiteToVault} siteId={this.state.recentSiteId+1} docId={this.state.docId}/>
+        <AddSiteModal addSite={this.addSiteToVault} siteId={this.state.recentSiteId+1} />
+        <EditSiteModal addSite={this.addSiteToVault} open={this.state.editSiteOpen} site={this.state.editSite} />
       </div>
     );
   }

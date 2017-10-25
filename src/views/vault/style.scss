@@ -1,0 +1,23 @@
+.vault {
+  padding-top: 100px;
+  min-height: 400px;
+  padding-left: 256px;
+}
+
+.tile {
+  border-radius: 2px;
+  box-shadow: 0 1px 3px RGBA(0,24,48,0.2);
+  display: inline-block;
+  background-color: #FFF;
+  margin: 15px 0 15px 15px;
+  position: relative;
+  vertical-align: top;
+  width: 270px;
+  height: 110px;
+  .cardTitle {
+    padding: 5px 15px !important;
+  }
+  .cardActions {
+    padding: 0 !important;
+  }
+}
