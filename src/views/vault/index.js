@@ -2,20 +2,15 @@ import React from 'react';
 import Auth from '../../auth/Auth';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
-import { getAccessToken, isLoggedIn } from '../../auth/AuthService';
+import { getAccessToken } from '../../auth/AuthService';
 import AddSiteModal from '../components/add_site';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-
+import {Card, CardActions, CardTitle } from 'material-ui/Card';
 import EyeIcon from 'react-icons/lib/md/remove-red-eye';
-import ControlIcon from 'react-icons/lib/md/keyboard-control';
 import TrashIcon from 'react-icons/lib/fa/trash';
 import IconButton from 'material-ui/IconButton';
-
-// styling
 import './style.scss';
 import EditSiteModal from "../components/edit_site";
-import DeleteSiteAlert from "../components/delete_alert/index";
+//import DeleteSiteAlert from "../components/delete_alert/index";
 
 // auth connection
 const auth = new Auth();
@@ -66,7 +61,6 @@ export default class Vault extends React.Component {
   }
 
   getVault(email) {
-    console.log(email);
     // fetch vault from database
     axios.get('api/getVaultByEmail', {
       headers: { Authorization: `Bearer ${getAccessToken()}` },
@@ -87,7 +81,6 @@ export default class Vault extends React.Component {
       params: { email: email }
     })
       .then(({ data })=> {
-        console.log(data);
         data.map(function (doc) {
           return(this.setState({ docId: doc.id }));
         }, this)
@@ -129,8 +122,6 @@ export default class Vault extends React.Component {
       if (doc.retro.vault !== "empty") {
         let bytes = CryptoJS.AES.decrypt(doc.retro.vault, this.state.authId);
         doc.retro.vault = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        console.log(doc.retro.vault);
-        console.log(data);
         this.setRecentSiteId(doc.retro.vault.sites);
       } else {
         doc.retro.vault = { notes: [], sites: [] };
@@ -152,8 +143,6 @@ export default class Vault extends React.Component {
         }
       }
       doc.retro.vault.sites.push(site);
-      console.log(doc.retro.vault.sites);
-      console.log(doc.retro.vault.sites.length);
       this.setRecentSiteId(doc.retro.vault.sites);
       this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
       this.setState({ editSiteOpen: false });
@@ -164,17 +153,13 @@ export default class Vault extends React.Component {
 
   deleteSiteFromVault(doc, index) {
     doc.retro.vault.sites.splice(index, 1);
-    console.log(doc.retro.vault.sites);
     this.setRecentSiteId(doc.retro.vault.sites);
     this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
   }
 
   encryptedVault(vault, key) {
     let cipherText = CryptoJS.AES.encrypt(JSON.stringify(vault), key);
-    console.log(cipherText);
-    let cipherString = cipherText.toString();
-    console.log(cipherString);
-    return cipherString;
+    return cipherText.toString();
   }
 
   setRecentSiteId(sites) {
@@ -184,9 +169,9 @@ export default class Vault extends React.Component {
   }
 
   onViewClick(site) {
-    console.log(site);
     this.setState({editSite: site});
     this.setState({editSiteOpen: true});
+    this.forceUpdate();
   }
 
   onTrashClick(doc, index, cards) {

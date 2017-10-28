@@ -1,10 +1,8 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import TextField from 'material-ui/TextField';
-import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Row, Col } from 'react-flexbox-grid';
 
 export default class EditSiteModal extends React.Component {
   constructor(props) {
@@ -43,10 +41,6 @@ export default class EditSiteModal extends React.Component {
     this.setState({ password: nextProps.site.password });
   }
 
-  // handleOpen = () => {
-  //   this.setState({open: true});
-  // };
-
   addSiteToVault() {
     let site = {
       "id": this.state.siteId,
@@ -63,7 +57,7 @@ export default class EditSiteModal extends React.Component {
       this.setState({error: 'This field is required'});
     } else {
       this.addSiteToVault();
-      //this.clearStates();
+      this.clearStates();
       this.setState({open: false});
     }
   };
@@ -95,7 +89,6 @@ export default class EditSiteModal extends React.Component {
   };
 
   _handleUsernameField = (e) => {
-    console.log("changes");
     this.setState({ username: e.target.value });
   };
 

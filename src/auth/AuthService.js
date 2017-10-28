@@ -19,13 +19,13 @@ export function getAccessToken() {
   return localStorage.getItem(ACCESS_TOKEN_KEY);
 }
 
-function clearIdToken() {
-  localStorage.removeItem(ID_TOKEN_KEY);
-}
-
-function clearAccessToken() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY);
-}
+// function clearIdToken() {
+//   localStorage.removeItem(ID_TOKEN_KEY);
+// }
+//
+// function clearAccessToken() {
+//   localStorage.removeItem(ACCESS_TOKEN_KEY);
+// }
 
 // Helper function that will allow us to extract the access_token and id_token
 function getParameterByName(name) {
