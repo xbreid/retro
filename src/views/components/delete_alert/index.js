@@ -35,10 +35,13 @@ export default class DeleteSiteAlert extends React.Component {
 
   handleClose = () => {
     this.setState({open: false});
+    this.props.closeModal();
   };
 
   handleDelete = () => {
     this.setState({open: false});
+    this.props.closeModal();
+    this.props.deleteSite();
   };
 
   render() {
