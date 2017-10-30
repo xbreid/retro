@@ -73,6 +73,7 @@ export default class EditSiteModal extends React.Component {
   handleClose = () => {
     this.clearStates();
     this.setState({open: false});
+    this.props.closeModal();
   };
 
   _handleUrlField = (e) => {
@@ -101,6 +102,14 @@ export default class EditSiteModal extends React.Component {
       marginLeft: 10
     };
 
+    const textFieldStyle = {
+      underlineFocusColor: {
+        borderColor: '#009688',
+      },
+      floatingLabelColor: {
+        color: '#009688',
+      }
+    };
 
     const actions = [
       <FlatButton
@@ -123,46 +132,51 @@ export default class EditSiteModal extends React.Component {
             actions={actions}
             modal={true}
             open={this.state.open}
+            actionsContainerClassName="action-container"
           >
             <Row style={rowStyle}>
-            <Col sm={6}>
-            <TextField
-              hintText="Site URL"
-              floatingLabelText="Site URL Field"
-              floatingLabelFixed={true}
-              value={this.state.url}
-              onChange={this._handleUrlField}
-            />
-            </Col>
-            <Col sm={6}>
-            <TextField
-              hintText="Site Name"
-              floatingLabelText="Site Name Field"
-              floatingLabelFixed={true}
-              errorText={this.state.error}
-              value={this.state.name}
-              onChange={this._handleNameField}
-            />
-            </Col>
-            <Col sm={6}>
-            <TextField
-              hintText="Username Field"
-              floatingLabelText="Username"
-              floatingLabelFixed={true}
-              value={this.state.username}
-              onChange={this._handleUsernameField}
-            />
-            </Col>
-            <Col sm={6}>
-            <TextField
-              hintText="Password Field"
-              floatingLabelText="Password"
-              //type="password"
-              floatingLabelFixed={true}
-              value={this.state.password}
-              onChange={this._handlePasswordField}
-            />
-            </Col>
+              <Col sm={6}>
+                <TextField
+                  hintText="Site URL"
+                  floatingLabelText="Site URL Field"
+                  value={this.state.url}
+                  onChange={this._handleUrlField}
+                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
+                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
+                />
+              </Col>
+              <Col sm={6}>
+                <TextField
+                  hintText="Site Name"
+                  floatingLabelText="Site Name Field"
+                  errorText={this.state.error}
+                  value={this.state.name}
+                  onChange={this._handleNameField}
+                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
+                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
+                />
+              </Col>
+              <Col sm={6}>
+                <TextField
+                  hintText="Username Field"
+                  floatingLabelText="Username"
+                  value={this.state.username}
+                  onChange={this._handleUsernameField}
+                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
+                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
+                />
+              </Col>
+              <Col sm={6}>
+                <TextField
+                  hintText="Password Field"
+                  floatingLabelText="Password"
+                  //type="password"
+                  value={this.state.password}
+                  onChange={this._handlePasswordField}
+                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
+                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
+                />
+              </Col>
             </Row>
           </Dialog>
       </div>
