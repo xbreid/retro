@@ -1,6 +1,6 @@
 {
-  "short_name": "Retro",
-  "name": "Retro Password Manager",
+  "short_name": "ReactPM",
+  "name": "React Password Manager",
   "icons": [
     {
       "src": "favicon.ico",
