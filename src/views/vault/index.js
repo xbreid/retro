@@ -11,7 +11,6 @@ import IconButton from 'material-ui/IconButton';
 import './style.scss';
 import EditSiteModal from "../components/edit_site";
 import DeleteSiteAlert from "../components/delete_alert/index";
-//import DeleteSiteAlert from "../components/delete_alert/index";
 
 // auth connection
 const auth = new Auth();
@@ -31,7 +30,9 @@ export default class Vault extends React.Component {
       editSiteOpen: false,
       editSite: {},
       deleteAlertOpen: false,
-      isVaultEmpty: false
+      isVaultEmpty: false,
+      deleteSite: null,
+      deleteSiteIndex: 0
     };
 
     this.deleteSiteFromVault = this.deleteSiteFromVault.bind(this);
@@ -39,6 +40,8 @@ export default class Vault extends React.Component {
     this.onViewClick = this.onViewClick.bind(this);
     this.onTrashClick = this.onTrashClick.bind(this);
     this.closeEditModal = this.closeEditModal.bind(this);
+    this.closeDeleteModal = this.closeDeleteModal.bind(this);
+    this.deleteSite = this.deleteSite.bind(this);
   }
 
   componentDidMount() {
@@ -180,19 +183,12 @@ export default class Vault extends React.Component {
   }
 
   onViewClick(site) {
-    this.setState({editSite: site});
-    this.setState({editSiteOpen: true});
+    this.setState({editSite: site, editSiteOpen: true});
     this.forceUpdate();
   }
 
-  onTrashClick(doc, index, cards) {
-    cards.splice(index, 1);
-    this.deleteSiteFromVault(doc, index);
-    this.forceUpdate();
-  }
-
-  deleteSite() {
-
+  closeDeleteModal() {
+    this.setState({ deleteAlertOpen: false });
   }
 
   isVaultEmpty() {
@@ -220,10 +216,21 @@ export default class Vault extends React.Component {
     }
   }
 
+  deleteSite(doc, cards) {
+    cards.splice(this.state.deleteSiteIndex, 1);
+    this.deleteSiteFromVault(doc, this.state.deleteSiteIndex);
+    this.setState({ deleteAlertOpen: false });
+  }
+
+  onTrashClick(index) {
+    this.setState({ deleteSiteIndex: index, deleteAlertOpen: true });
+  }
+
   render() {
     const cardTitle = { fontSize: 18 };
     const cardButtons = { margin: 0, float: 'right' };
     let cards = [];
+    let modal = [];
 
     const cardSet = this.state.data.map(function (doc) {
       doc.retro.vault.sites.map(function (site, index) {
@@ -234,13 +241,21 @@ export default class Vault extends React.Component {
           username = username.substr(0, 33) + "...";
         }
 
+        if (name.length > 27) {
+          name = name.substr(0, 27) + "...";
+        }
+
+        modal.splice(0, 1,
+          <DeleteSiteAlert key={index} deleteSite={(e) => this.deleteSite(doc, cards)} closeModal={this.closeDeleteModal} open={this.state.deleteAlertOpen}/>
+        );
+
         cards.push(
           <Card key={index} className="tile">
             <CardTitle className="cardTitle" titleStyle={cardTitle} title={name} subtitle={username}/>
             <CardActions className="cardActions">
               <div style={cardButtons}>
                 <IconButton onClick={(e) => this.onViewClick(site)}><EyeIcon size="16"/></IconButton>
-                <IconButton onClick={(e) => this.onTrashClick(doc, index, cards)}><TrashIcon size="16"/></IconButton>
+                <IconButton onClick={(e) => this.onTrashClick(index)}><TrashIcon size="16"/></IconButton>
               </div>
             </CardActions>
           </Card>
@@ -258,7 +273,7 @@ export default class Vault extends React.Component {
         </div>
         <AddSiteModal addSite={this.addSiteToVault} siteId={this.state.recentSiteId+1} />
         <EditSiteModal addSite={this.addSiteToVault} closeModal={this.closeEditModal} open={this.state.editSiteOpen} site={this.state.editSite} />
-        <DeleteSiteAlert deleteSite={this.deleteSite} open={this.state.deleteAlertOpen}/>
+        {modal}
       </div>
     );
   }
