@@ -21,7 +21,7 @@ export default class App extends Component {
 
     return (
       <MuiThemeProvider>
-        <div>
+        <div className="app-wrapper">
           <SiteHead/>
           <Nav open={open}/>
           {React.cloneElement(this.props.children, {navOpen: this.toggleNav})}
