@@ -4,6 +4,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Generator from 'generate-password';
 import Checkbox from 'material-ui/Checkbox';
+import PassProgressBar from '../components/progress_bar';
 
 // styling
 import './style.scss';
@@ -122,6 +123,11 @@ export default class PassGen extends React.Component {
       },
     };
 
+    const progressStyle = {
+      width: 250,
+      left: '29%'
+    };
+
     return (
       <div className="page-container">
         <Paper className="paper-container" zDepth={2} >
@@ -132,6 +138,7 @@ export default class PassGen extends React.Component {
               value={this.state.generatedPass}
               style={paperStyle.passField}
             />
+            <PassProgressBar style={progressStyle} password={this.state.generatedPass}/>
             <div>
               <RaisedButton
                 label="Generate"
