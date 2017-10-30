@@ -150,7 +150,7 @@ export default class Home extends React.Component {
                   <img style={styles.couchImg} alt="" src={CouchImg}/>
                   <h2 style={styles.toolHeading}>Couchbase</h2>
                 </div>
-                <p style={styles.toolDesc}>This project utilizes Couchbase as great example for creating backend routes and endpoints for a database. As well as how to get and post data to and from the database using axios. </p>
+                <p style={styles.toolDesc}>This project utilizes Couchbase as a great example for creating backend routes and endpoints for a database. As well as how to get and post data to and from the database using axios. </p>
               </Col>
             </Row>
           </Grid>
