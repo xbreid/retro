@@ -47,6 +47,50 @@ export default class Tools extends React.Component {
     this.generatePassword();
   }
 
+  _handleLengthField = (e) => {
+    this.setState({ length: e.target.value });
+  };
+
+  updateHasNumbers() {
+    this.setState((oldState) => {
+      return {
+        hasNumbers: !oldState.hasNumbers,
+      };
+    });
+  }
+
+  updateHasSymbols() {
+    this.setState((oldState) => {
+      return {
+        hasSymbols: !oldState.hasSymbols,
+      };
+    });
+  }
+
+  updateUseUppercase() {
+    this.setState((oldState) => {
+      return {
+        useUppercase: !oldState.useUppercase,
+      };
+    });
+  }
+
+  updateExcSimChards() {
+    this.setState((oldState) => {
+      return {
+        excSimChars: !oldState.excSimChars,
+      };
+    });
+  }
+
+  updateStrict() {
+    this.setState((oldState) => {
+      return {
+        isStrict: !oldState.isStrict,
+      };
+    });
+  }
+
   render() {
     const style = {
       paddingTop: 100,
@@ -59,13 +103,13 @@ export default class Tools extends React.Component {
         height: 700,
         width: 600,
         margin: 20,
-        textAlign: 'center',
         display: 'inline-block',
         position: 'absolute',
         top: '18%',
         left: '35%'
       },
       topSection: {
+        textAlign: 'center',
         backgroundColor: 'whitesmoke'
       },
       heading: {
@@ -77,6 +121,27 @@ export default class Tools extends React.Component {
       },
       passField: {
         fontSize: 20
+      },
+      checkbox: {
+        marginBottom: 16,
+      },
+      advSettings: {
+        border: '1px solid grey',
+        borderRadius: 2,
+        position: 'absolute',
+        margin: 'auto',
+        padding: 20,
+        top: '41%',
+        left: '18%'
+      },
+      advSettingsHead: {
+        padding: 25,
+        fontSize: 20,
+        fontWeight: 100,
+      },
+      lengthField: {
+        textAlign: 'center',
+        marginBottom: 25
       }
     };
 
@@ -100,7 +165,47 @@ export default class Tools extends React.Component {
             </div>
           </div>
           <div>
-            
+            {/*<h3 style={paperStyle.advSettingsHead}>Advanced settings:</h3>*/}
+            <div style={paperStyle.advSettings}>
+              <div style={paperStyle.lengthField}>
+                <TextField
+                  hintText="Length of Password"
+                  floatingLabelText="Password length"
+                  defaultValue="10"
+                  onChange={this._handleLengthField}
+                />
+              </div>
+              <Checkbox
+                label="include numbers (0-9)"
+                checked={this.state.hasNumbers}
+                onCheck={this.updateHasNumbers.bind(this)}
+                style={paperStyle.checkbox}
+              />
+              <Checkbox
+                label="include symbols (!$%@#)"
+                checked={this.state.hasSymbols}
+                onCheck={this.updateHasSymbols.bind(this)}
+                style={paperStyle.checkbox}
+              />
+              <Checkbox
+                label="include uppercase (A-Z)"
+                checked={this.state.useUppercase}
+                onCheck={this.updateUseUppercase.bind(this)}
+                style={paperStyle.checkbox}
+              />
+              <Checkbox
+                label="Exclude similar characters"
+                checked={this.state.excSimChars}
+                onCheck={this.updateExcSimChards.bind(this)}
+                style={paperStyle.checkbox}
+              />
+              <Checkbox
+                label="include at least one character from above"
+                checked={this.state.isStrict}
+                onCheck={this.updateStrict.bind(this)}
+                style={paperStyle.checkbox}
+              />
+            </div>
           </div>
         </Paper>
       </div>
