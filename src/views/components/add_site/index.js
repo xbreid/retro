@@ -110,16 +110,6 @@ export default class AddSiteModal extends React.Component {
       marginLeft: 10
     };
 
-    const textFieldStyle = {
-      underlineFocusColor: {
-        borderColor: '#009688',
-      },
-      floatingLabelColor: {
-        color: '#009688',
-      }
-    };
-
-
     const actions = [
       <FlatButton
         label="Cancel"
@@ -152,8 +142,6 @@ export default class AddSiteModal extends React.Component {
               floatingLabelText="Site URL Field"
               value={this.state.url}
               onChange={this._handleUrlField}
-              underlineFocusStyle={textFieldStyle.underlineFocusColor}
-              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
@@ -163,8 +151,6 @@ export default class AddSiteModal extends React.Component {
               errorText={this.state.error}
               value={this.state.name}
               onChange={this._handleNameField}
-              underlineFocusStyle={textFieldStyle.underlineFocusColor}
-              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
@@ -173,8 +159,6 @@ export default class AddSiteModal extends React.Component {
               floatingLabelText="Username"
               value={this.state.username}
               onChange={this._handleUsernameField}
-              underlineFocusStyle={textFieldStyle.underlineFocusColor}
-              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
@@ -184,8 +168,6 @@ export default class AddSiteModal extends React.Component {
               type="password"
               value={this.state.password}
               onChange={this._handlePasswordField}
-              underlineFocusStyle={textFieldStyle.underlineFocusColor}
-              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             </Row>
