@@ -14,7 +14,7 @@ export default class PassGen extends React.Component {
     super(props);
 
     this.state = {
-      length: 10,
+      length: 12,
       hasNumbers: true,
       hasSymbols: true,
       useUppercase: true,
@@ -155,7 +155,7 @@ export default class PassGen extends React.Component {
                   hintText="Length of Password"
                   floatingLabelText="Password length"
                   errorText={this.state.error}
-                  defaultValue="10"
+                  defaultValue="12"
                   onChange={this._handleLengthField}
                 />
               </div>
