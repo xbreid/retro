@@ -1,1 +1,7 @@
 @import '../../../shared/variables';
+
+.password-field {
+  > input {
+    margin-top: 12px !important;
+  }
+}

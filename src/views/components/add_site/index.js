@@ -5,6 +5,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import TextField from 'material-ui/TextField';
 import { Row, Col } from 'react-flexbox-grid';
+import EyeIcon from 'react-icons/lib/md/remove-red-eye';
+import IconButton from 'material-ui/IconButton';
+import PassProgressBar from '../progress_bar';
 
 import './style.scss';
 
@@ -21,6 +24,9 @@ export default class AddSiteModal extends React.Component {
       username: '',
       password: '',
       siteId: 0,
+      showPassword: false,
+      passTypeField: "",
+      keyboardFocused: false
 
     };
 
@@ -82,9 +88,9 @@ export default class AddSiteModal extends React.Component {
 
   _handleNameField = (e) => {
     if (this.state.name !== '') {
-      this.setState({disableSubmit: false});
+      this.setState({disableSubmit: false, keyboardFocused: false });
     } else {
-      this.setState({disableSubmit: true});
+      this.setState({disableSubmit: true, keyboardFocused: true });
     }
     this.setState({ name: e.target.value });
   };
@@ -96,6 +102,15 @@ export default class AddSiteModal extends React.Component {
   _handlePasswordField = (e) => {
     this.setState({ password: e.target.value });
   };
+
+  handleEyeClick() {
+    this.setState({ showPassword: !this.state.showPassword });
+    if(!this.state.showPassword) {
+      this.setState({ passTypeField: "password" });
+    } else {
+      this.setState({ passTypeField: "" });
+    }
+  }
 
   render() {
     const fab = {
@@ -120,9 +135,18 @@ export default class AddSiteModal extends React.Component {
         label="Submit"
         primary={true}
         onClick={this.handleSubmit}
+        keyboardFocused={this.state.keyboardFocused}
         disabled={this.state.disableSubmit}
       />,
     ];
+
+    const eyeStyle = {
+      marginLeft: -40
+    };
+
+    const progressStyle = {
+      width: 250,
+    };
 
     return (
       <div>
@@ -165,10 +189,18 @@ export default class AddSiteModal extends React.Component {
             <TextField
               hintText="Password Field"
               floatingLabelText="Password"
-              type="password"
+              type={this.state.passTypeField}
               value={this.state.password}
               onChange={this._handlePasswordField}
+              className="password-field"
             />
+              <IconButton style={eyeStyle} onClick={(e) => this.handleEyeClick()}><EyeIcon size="15"/></IconButton>
+              <div>
+                <PassProgressBar style={progressStyle} password={this.state.password}/>
+              </div>
+            </Col>
+            <Col sm={12}>
+
             </Col>
             </Row>
           </Dialog>
