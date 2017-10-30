@@ -16,6 +16,7 @@ export default class PasswordProgressBar extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.password);
     this.setState({
       style: this.props.style,
       password: this.props.password
@@ -31,8 +32,10 @@ export default class PasswordProgressBar extends React.Component {
   }
 
   validatePassword(password) {
-
     let format = /[!@#$%^&*()_+\-=\]{};':"\\|,.<>?]/;
+    let numFormat = /^\d+$/;
+    let lcFormat = /^[a-z]+$/;
+    let symFormat = /^[!@#$%^&*()_+\-=\]{};':"\\|,.<>?]+$/;
 
     let schema = new passwordValidator();
     schema
@@ -54,9 +57,15 @@ export default class PasswordProgressBar extends React.Component {
       }
     } else if(password.length >= 6 && (password.length <= 8)) {
       if (schema.validate(password) && (format.test(password))) {
-        this.setState({ color: "lightgreen", completed: 90 });
+        this.setState({ color: "lightgreen", completed: 85 });
       } else if (schema.validate(password)) {
         this.setState({ color: "lightgreen", completed: 75 });
+      } else if (numFormat.test(password)) {
+        this.setState({ color: "yellow", completed: 50 });
+      } else if (symFormat.test(password)) {
+        this.setState({ color: "yellow", completed: 50 });
+      } else if (lcFormat.test(password)) {
+        this.setState({ color: "yellow", completed: 50 });
       } else {
         this.setState({ color: "yellow", completed: 50 });
       }
@@ -65,6 +74,15 @@ export default class PasswordProgressBar extends React.Component {
         this.setState({ color: "green", completed: 100 });
       } else if (schema.validate(password)) {
         this.setState({ color: "lightgreen", completed: 85 });
+      } else if (numFormat.test(password)) {
+        console.log('test1');
+        this.setState({ color: "yellow", completed: 50 });
+      } else if (symFormat.test(password)) {
+        console.log('test2');
+        this.setState({ color: "yellow", completed: 50 });
+      } else if (lcFormat.test(password)) {
+        console.log('test3');
+        this.setState({ color: "yellow", completed: 50 });
       } else {
         this.setState({ color: "lightgreen", completed: 75 });
       }
@@ -73,6 +91,12 @@ export default class PasswordProgressBar extends React.Component {
         this.setState({ color: "green", completed: 100 });
       } else if (schema.validate(password)) {
         this.setState({ color: "lightgreen", completed: 90 });
+      } else if (numFormat.test(password)) {
+        this.setState({ color: "yellow", completed: 50 });
+      } else if (symFormat.test(password)) {
+        this.setState({ color: "lightgreen", completed: 75 });
+      } else if (lcFormat.test(password)) {
+        this.setState({ color: "lightgreen", completed: 75 });
       } else {
         this.setState({ color: "lightgreen", completed: 85 });
       }
