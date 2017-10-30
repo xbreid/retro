@@ -29,13 +29,15 @@ export default class Vault extends React.Component {
       recentSiteId: 0,
       editSiteOpen: false,
       editSite: {},
-      deleteAlertOpen: false
+      deleteAlertOpen: false,
+      isVaultEmpty: false
     };
 
     this.deleteSiteFromVault = this.deleteSiteFromVault.bind(this);
     this.addSiteToVault = this.addSiteToVault.bind(this);
     this.onViewClick = this.onViewClick.bind(this);
     this.onTrashClick = this.onTrashClick.bind(this);
+    this.closeEditModal = this.closeEditModal.bind(this);
   }
 
   componentDidMount() {
@@ -123,8 +125,10 @@ export default class Vault extends React.Component {
         let bytes = CryptoJS.AES.decrypt(doc.retro.vault, this.state.authId);
         doc.retro.vault = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
         this.setRecentSiteId(doc.retro.vault.sites);
+        this.setState({ isVaultEmpty: false });
       } else {
-        doc.retro.vault = { notes: [], sites: [] };
+        this.setState({ isVaultEmpty: true });
+        doc.retro.vault = { sites: [] };
       }
       return(this.setState({ data: data }));
     }, this)
@@ -139,6 +143,7 @@ export default class Vault extends React.Component {
           this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
           this.setState({ editSiteOpen: false });
           this.setState({ editSite: {}});
+          this.setState({ isVaultEmpty: false });
           return true;
         }
       }
@@ -147,8 +152,13 @@ export default class Vault extends React.Component {
       this.upsertVaultToDb(this.encryptedVault(doc.retro.vault, this.state.authId));
       this.setState({ editSiteOpen: false });
       this.setState({ editSite: {}});
+      this.setState({ isVaultEmpty: false });
       return true;
     }, this);
+  }
+
+  closeEditModal() {
+    this.setState({editSiteOpen: false});
   }
 
   deleteSiteFromVault(doc, index) {
@@ -180,9 +190,34 @@ export default class Vault extends React.Component {
     this.forceUpdate();
   }
 
+  isVaultEmpty() {
+    const imgStyle = {position: 'absolute', bottom: 0, right: 0, padding: 90};
+    const welcome = { position: 'absolute', top: '40%', left: '45%',};
+    const welcomeTitle = { textAlign: 'center', fontSize: 52, fontWeight: 100 };
+    const subtext = { textAlign: 'center', fontSize: 18, marginTop: 30};
+
+    if (this.state.isVaultEmpty) {
+      return (
+        <div>
+          <div style={welcome}>
+            <h1 style={welcomeTitle}><span  aria-label="wave" role="img">👋🏼</span> Welcome!</h1>
+            <p style={subtext}>Thank you for using reactPM, start adding sites now.</p>
+          </div>
+          <img
+            style={imgStyle}
+            alt=""
+            src="https://www.wpclipart.com/signs_symbol/arrows/angled_arrows/angled_arrows_2/arrow_angled_black_right_down.png"
+          />
+        </div>
+      );
+    } else {
+      return false;
+    }
+  }
+
   render() {
     const cardTitle = { fontSize: 18 };
-    const cardButtons = { float: 'right' };
+    const cardButtons = { margin: 0, float: 'right' };
     let cards = [];
 
     const cardSet = this.state.data.map(function (doc) {
@@ -213,10 +248,11 @@ export default class Vault extends React.Component {
     return (
       <div>
         <div className="vault">
+          {this.isVaultEmpty()}
           {cardSet}
         </div>
         <AddSiteModal addSite={this.addSiteToVault} siteId={this.state.recentSiteId+1} />
-        <EditSiteModal addSite={this.addSiteToVault} open={this.state.editSiteOpen} site={this.state.editSite} />
+        <EditSiteModal addSite={this.addSiteToVault} closeModal={this.closeEditModal} open={this.state.editSiteOpen} site={this.state.editSite} />
       </div>
     );
   }
