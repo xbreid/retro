@@ -8,8 +8,7 @@ import Checkbox from 'material-ui/Checkbox';
 // styling
 import './style.scss';
 
-
-export default class Tools extends React.Component {
+export default class PassGen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -20,7 +19,8 @@ export default class Tools extends React.Component {
       useUppercase: true,
       excSimChars: false,
       isStrict: false,
-      generatedPass: ''
+      generatedPass: '',
+      error: ''
     };
 
     this.handleGenClick = this.handleGenClick.bind(this);
@@ -36,11 +36,18 @@ export default class Tools extends React.Component {
       strict: this.state.isStrict
     });
     this.setState({ generatedPass: initPass });
-    //this.forceUpdate();
   }
 
   handleGenClick = () => {
-    this.generatePassword();
+    if (this.state.length === '') {
+      this.setState({ error: 'not valid length between 0-256' });
+    } else {
+      if(parseInt(this.state.length, 10) > 256 || parseInt(this.state.length, 10) < 0) {
+        this.setState({ error: 'not valid length between 0-256' });
+      } else {
+        this.generatePassword();
+      }
+    }
   };
 
   componentDidMount() {
@@ -48,7 +55,17 @@ export default class Tools extends React.Component {
   }
 
   _handleLengthField = (e) => {
-    this.setState({ length: e.target.value });
+    if(!isNaN(e.target.value)) {
+      if(parseInt(e.target.value, 10) > 256 || parseInt(e.target.value, 10) < 0) {
+        this.setState({ error: 'not valid length between 0-256' });
+      } else {
+        this.setState({ length: e.target.value });
+        this.setState({ error: '' });
+      }
+    } else {
+      this.setState({ error: 'not valid length between 0-256' });
+    }
+
   };
 
   updateHasNumbers() {
@@ -92,30 +109,8 @@ export default class Tools extends React.Component {
   }
 
   render() {
-    const style = {
-      paddingTop: 100,
-      minHeight: 400,
-      paddingLeft: 256
-    };
 
     const paperStyle = {
-      paper: {
-        height: 700,
-        width: 600,
-        margin: 20,
-        display: 'inline-block',
-        position: 'absolute',
-        top: '18%',
-        left: '35%'
-      },
-      topSection: {
-        textAlign: 'center',
-        backgroundColor: 'whitesmoke'
-      },
-      heading: {
-        fontWeight: 100,
-        padding: 40
-      },
       genBtn: {
         margin: 30
       },
@@ -125,31 +120,13 @@ export default class Tools extends React.Component {
       checkbox: {
         marginBottom: 16,
       },
-      advSettings: {
-        border: '1px solid grey',
-        borderRadius: 2,
-        position: 'absolute',
-        margin: 'auto',
-        padding: 20,
-        top: '41%',
-        left: '18%'
-      },
-      advSettingsHead: {
-        padding: 25,
-        fontSize: 20,
-        fontWeight: 100,
-      },
-      lengthField: {
-        textAlign: 'center',
-        marginBottom: 25
-      }
     };
 
     return (
-      <div style={style}>
-        <Paper style={paperStyle.paper} zDepth={2} >
-          <div style={paperStyle.topSection}>
-            <h1 style={paperStyle.heading}>Generate a Password</h1>
+      <div className="page-container">
+        <Paper className="paper-container" zDepth={2} >
+          <div className="top-section">
+            <h1 className="heading">Generate a Password</h1>
             <TextField
               id="text-field-genpass"
               value={this.state.generatedPass}
@@ -165,12 +142,12 @@ export default class Tools extends React.Component {
             </div>
           </div>
           <div>
-            {/*<h3 style={paperStyle.advSettingsHead}>Advanced settings:</h3>*/}
-            <div style={paperStyle.advSettings}>
-              <div style={paperStyle.lengthField}>
+            <div className="advance-settings">
+              <div className="length-field">
                 <TextField
                   hintText="Length of Password"
                   floatingLabelText="Password length"
+                  errorText={this.state.error}
                   defaultValue="10"
                   onChange={this._handleLengthField}
                 />
