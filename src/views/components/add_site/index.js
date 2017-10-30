@@ -6,6 +6,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import TextField from 'material-ui/TextField';
 import { Row, Col } from 'react-flexbox-grid';
 
+import './style.scss';
+
 export default class AddSiteModal extends React.Component {
   constructor(props) {
     super(props);
@@ -108,6 +110,15 @@ export default class AddSiteModal extends React.Component {
       marginLeft: 10
     };
 
+    const textFieldStyle = {
+      underlineFocusColor: {
+        borderColor: '#009688',
+      },
+      floatingLabelColor: {
+        color: '#009688',
+      }
+    };
+
 
     const actions = [
       <FlatButton
@@ -139,28 +150,31 @@ export default class AddSiteModal extends React.Component {
             <TextField
               hintText="Site URL"
               floatingLabelText="Site URL Field"
-              floatingLabelFixed={true}
               value={this.state.url}
               onChange={this._handleUrlField}
+              underlineFocusStyle={textFieldStyle.underlineFocusColor}
+              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
             <TextField
               hintText="Site Name"
               floatingLabelText="Site Name Field"
-              floatingLabelFixed={true}
               errorText={this.state.error}
               value={this.state.name}
               onChange={this._handleNameField}
+              underlineFocusStyle={textFieldStyle.underlineFocusColor}
+              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
             <TextField
               hintText="Username Field"
               floatingLabelText="Username"
-              floatingLabelFixed={true}
               value={this.state.username}
               onChange={this._handleUsernameField}
+              underlineFocusStyle={textFieldStyle.underlineFocusColor}
+              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             <Col sm={6}>
@@ -168,9 +182,10 @@ export default class AddSiteModal extends React.Component {
               hintText="Password Field"
               floatingLabelText="Password"
               type="password"
-              floatingLabelFixed={true}
               value={this.state.password}
               onChange={this._handlePasswordField}
+              underlineFocusStyle={textFieldStyle.underlineFocusColor}
+              floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
             />
             </Col>
             </Row>
