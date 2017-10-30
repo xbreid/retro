@@ -3,6 +3,9 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import { Row, Col } from 'react-flexbox-grid';
+import EyeIcon from 'react-icons/lib/md/remove-red-eye';
+import IconButton from 'material-ui/IconButton';
+import PassProgressBar from '../progress_bar';
 
 export default class EditSiteModal extends React.Component {
   constructor(props) {
@@ -17,6 +20,8 @@ export default class EditSiteModal extends React.Component {
       username: '',
       password: '',
       siteId: 0,
+      showPassword: true,
+      passTypeField: "password"
 
     };
 
@@ -97,18 +102,18 @@ export default class EditSiteModal extends React.Component {
     this.setState({ password: e.target.value });
   };
 
+  handleEyeClick() {
+    this.setState({ showPassword: !this.state.showPassword });
+    if(!this.state.showPassword) {
+      this.setState({ passTypeField: "" });
+    } else {
+      this.setState({ passTypeField: "password" });
+    }
+  }
+
   render() {
     const rowStyle = {
       marginLeft: 10
-    };
-
-    const textFieldStyle = {
-      underlineFocusColor: {
-        borderColor: '#009688',
-      },
-      floatingLabelColor: {
-        color: '#009688',
-      }
     };
 
     const actions = [
@@ -121,9 +126,18 @@ export default class EditSiteModal extends React.Component {
         label="Submit"
         primary={true}
         onClick={this.handleSubmit}
+        keyboardFocused={true}
         disabled={this.state.disableSubmit}
       />,
     ];
+
+    const eyeStyle = {
+      marginLeft: -40
+    };
+
+    const progressStyle = {
+      width: 250,
+    };
 
     return (
       <div>
@@ -141,8 +155,6 @@ export default class EditSiteModal extends React.Component {
                   floatingLabelText="Site URL Field"
                   value={this.state.url}
                   onChange={this._handleUrlField}
-                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
-                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
                 />
               </Col>
               <Col sm={6}>
@@ -152,8 +164,6 @@ export default class EditSiteModal extends React.Component {
                   errorText={this.state.error}
                   value={this.state.name}
                   onChange={this._handleNameField}
-                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
-                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
                 />
               </Col>
               <Col sm={6}>
@@ -162,20 +172,21 @@ export default class EditSiteModal extends React.Component {
                   floatingLabelText="Username"
                   value={this.state.username}
                   onChange={this._handleUsernameField}
-                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
-                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
                 />
               </Col>
               <Col sm={6}>
                 <TextField
                   hintText="Password Field"
                   floatingLabelText="Password"
-                  //type="password"
+                  type={this.state.passTypeField}
                   value={this.state.password}
                   onChange={this._handlePasswordField}
-                  underlineFocusStyle={textFieldStyle.underlineFocusColor}
-                  floatingLabelFocusStyle={textFieldStyle.floatingLabelColor}
+                  className="password-field"
                 />
+                <IconButton style={eyeStyle} onClick={(e) => this.handleEyeClick()}><EyeIcon size="15"/></IconButton>
+                <div>
+                  <PassProgressBar style={progressStyle} password={this.state.password}/>
+                </div>
               </Col>
             </Row>
           </Dialog>
