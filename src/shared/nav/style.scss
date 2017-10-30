@@ -3,13 +3,13 @@
 
 .top-bar-nav {
   height: 40px;
-  background-color: #607D8B;
+  background-color: $dark-primary;
   display: flex;
-  color: rgb(255, 255, 255);
+  color: $white;
   align-items: center;
   justify-content: center;
   position: fixed;
-  top: 0px;
+  top: 0;
   width: 100%;
   z-index: 1101;
 }
@@ -17,11 +17,16 @@
 .logo-nav {
   margin: 20px 15px;
   font-size: 24px;
-  color: #f3f3f3;
+  color: $white;
   font-weight: 100;
 }
 
 .name {
   font-size: 18px;
   padding: 10px;
+  color: $primary-text;
+}
+
+.nav-icons {
+  color: $primary-text;
 }

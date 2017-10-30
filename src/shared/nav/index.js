@@ -2,10 +2,8 @@ import React from 'react';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import { Link } from 'react-router';
-import NoteIcon from 'react-icons/lib/md/insert-drive-file';
 import SiteIcon from 'react-icons/lib/md/language';
 import WrenchIcon from 'react-icons/lib/md/build';
-import SettingsIcon from 'react-icons/lib/md/settings';
 import ExitIcon from 'react-icons/lib/md/exit-to-app';
 import Auth from '../../auth/Auth';
 
@@ -47,35 +45,23 @@ export default (props) => (
   <Drawer open={props.open}>
     <NavHead/>
     <div style={style}>
-        <Link style={linkStyle} to="vault">
-          <MenuItem>
-          <SiteIcon size="35"/>
-          <span className="name">Sites</span>
-          </MenuItem>
-        </Link>
-        <Link style={linkStyle} to="notes">
-          <MenuItem>
-          <NoteIcon size="35"/>
-          <span className="name">Notes</span>
-          </MenuItem>
-        </Link>
-      <Link style={linkStyle} to="tools">
+      <Link style={linkStyle} to="vault">
         <MenuItem>
-          <WrenchIcon size="35"/>
-          <span className="name">Tools</span>
+        <SiteIcon className="nav-icons" size="35"/>
+        <span className="name">Sites</span>
         </MenuItem>
       </Link>
-      <Link style={linkStyle} to="settings">
+      <Link style={linkStyle} to="generator">
         <MenuItem>
-          <SettingsIcon size="35"/>
-          <span className="name">Settings</span>
+          <WrenchIcon className="nav-icons" size="35"/>
+          <span className="name">Generator</span>
         </MenuItem>
       </Link>
     </div>
       {
         auth.isAuthenticated() && (
           <MenuItem onClick={logout} style={logoutStyle}>
-            <ExitIcon size="35"/>
+            <ExitIcon className="nav-icons" size="35"/>
             <span className="name">Log out</span>
           </MenuItem>
         )
