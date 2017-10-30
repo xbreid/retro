@@ -10,6 +10,7 @@ import TrashIcon from 'react-icons/lib/fa/trash';
 import IconButton from 'material-ui/IconButton';
 import './style.scss';
 import EditSiteModal from "../components/edit_site";
+import DeleteSiteAlert from "../components/delete_alert/index";
 //import DeleteSiteAlert from "../components/delete_alert/index";
 
 // auth connection
@@ -128,7 +129,7 @@ export default class Vault extends React.Component {
         this.setState({ isVaultEmpty: false });
       } else {
         this.setState({ isVaultEmpty: true });
-        doc.retro.vault = { sites: [] };
+        doc.retro.vault = { notes: [], sites: [] };
       }
       return(this.setState({ data: data }));
     }, this)
@@ -188,6 +189,10 @@ export default class Vault extends React.Component {
     cards.splice(index, 1);
     this.deleteSiteFromVault(doc, index);
     this.forceUpdate();
+  }
+
+  deleteSite() {
+
   }
 
   isVaultEmpty() {
@@ -253,6 +258,7 @@ export default class Vault extends React.Component {
         </div>
         <AddSiteModal addSite={this.addSiteToVault} siteId={this.state.recentSiteId+1} />
         <EditSiteModal addSite={this.addSiteToVault} closeModal={this.closeEditModal} open={this.state.editSiteOpen} site={this.state.editSite} />
+        <DeleteSiteAlert deleteSite={this.deleteSite} open={this.state.deleteAlertOpen}/>
       </div>
     );
   }
