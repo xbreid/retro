@@ -15,7 +15,7 @@ const style = {
 export default (props) => (
   <header className="site-head">
     <div className="top-bar">
-      Currently in Development!
+      Currently in Alpha!
     </div>
     <a style={style} href="https://www.github.com/bar0191/retro">
       <IconGit size="27" />
