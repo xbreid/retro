@@ -176,7 +176,7 @@ export default class Vault extends React.Component {
 
   isVaultEmpty() {
     const imgStyle = {position: 'absolute', bottom: 0, right: 0, padding: 90};
-    const welcome = { position: 'absolute', top: '40%', left: '45%',};
+    const welcome = { position: 'absolute', top: '40%', left: '40%',};
     const welcomeTitle = { textAlign: 'center', fontSize: 52, fontWeight: 100 };
     const subtext = { textAlign: 'center', fontSize: 18, marginTop: 30};
 
