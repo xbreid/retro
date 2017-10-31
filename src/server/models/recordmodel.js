@@ -78,18 +78,6 @@ RecordModel.getSitesByEmail = function(email, callback) {
   });
 };
 
-RecordModel.getNotesByEmail = function(email, callback) {
-  var statement = "select vault.notes from `"+process.env.BUCKET_QUERY+"` where email = '"+email+"';";
-  var query = N1qlQuery.fromString(statement).consistency(N1qlQuery.Consistency.REQUEST_PLUS);
-  db.query(query, function(error, result) {
-    if(error) {
-      console.log("error with query");
-      return callback(error, null);
-    }
-    callback(null, result);
-  });
-};
-
 /*RecordModel.delete = function(documentId, callback) {
   db.remove(documentId, function(error, result) {
     if(error) {

@@ -7,7 +7,7 @@ let jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
-    jwksRequestsPerMinute: 5,
+    jwksRequestsPerMinute: 10,
     jwksUri: process.env.AUTH0_API_JWKSURI
   }),
   audience: process.env.AUTH0_API_AUDIENCE,
@@ -62,31 +62,10 @@ let appRouter = function(app) {
     });
   });
 
-  app.get("/api/getNotesByEmail", jwtCheck, function(req, res) {
-    RecordModel.getNotesByEmail(req.query.email, function(error, result) {
-      if(error) {
-        return res.status(400).send(error);
-      }
-      res.send(result);
-    });
-  });
-
-  /*app.post("/api/delete", function(req, res) {
-    if(!req.body.document_id) {
-      return res.status(400).send({"status": "error", "message": "A document id is required"});
-    }
-    RecordModel.delete(req.body.document_id, function(error, result) {
-      if(error) {
-        return res.status(400).send(error);
-      }
-      res.send(result);
-    });
-  });*/
-
-  app.get('/api/authorized', jwtCheck, function (req, res) {
-    console.log('auth secured');
-    res.send('Secured Resource');
-  });
+  // app.get('/api/authorized', jwtCheck, function (req, res) {
+  //   console.log('auth secured');
+  //   res.send('Secured Resource');
+  // });
 
 // end of appRouter
 };
