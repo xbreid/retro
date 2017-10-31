@@ -1,7 +1,7 @@
 {
   "name": "retro",
   "version": "0.1.0",
-  "proxy": "http://localhost:3001/",
+  "proxy": "http://localhost:3000/",
   "private": true,
   "dependencies": {
     "auth0-js": "^8.10.1",
