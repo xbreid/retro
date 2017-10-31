@@ -18,6 +18,7 @@ export default class AddSiteModal extends React.Component {
     this.state = {
       open: false,
       error: '',
+      passError: '',
       disableSubmit: true,
       url: '',
       name: '',
@@ -60,7 +61,9 @@ export default class AddSiteModal extends React.Component {
   };
 
   handleSubmit = () => {
-    if (this.state.name === '') {
+    if (this.state.password.length > 256) {
+      this.setState({ passError: 'Password length invalid (0-256)' });
+    } else if (this.state.name === '') {
       this.setState({error: 'This field is required'});
     } else {
       this.addSiteToVault();
@@ -75,6 +78,8 @@ export default class AddSiteModal extends React.Component {
     this.setState({ username: '' });
     this.setState({ password: '' });
     this.setState({ error: '' });
+    this.setState({ passError: '' });
+    this.setState({ passTypeField: "" });
   }
 
   handleClose = () => {
@@ -100,16 +105,19 @@ export default class AddSiteModal extends React.Component {
   };
 
   _handlePasswordField = (e) => {
-    this.setState({ password: e.target.value });
+    if (e.target.value.length < 256) {
+      this.setState({ passError: '' });
+      this.setState({ password: e.target.value });
+    }
   };
 
   handleEyeClick() {
-    this.setState({ showPassword: !this.state.showPassword });
     if(!this.state.showPassword) {
       this.setState({ passTypeField: "password" });
     } else {
       this.setState({ passTypeField: "" });
     }
+    this.setState({ showPassword: !this.state.showPassword });
   }
 
   render() {
@@ -189,6 +197,7 @@ export default class AddSiteModal extends React.Component {
             <TextField
               hintText="Password Field"
               floatingLabelText="Password"
+              errorText={this.state.passError}
               type={this.state.passTypeField}
               value={this.state.password}
               onChange={this._handlePasswordField}
