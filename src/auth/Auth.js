@@ -40,11 +40,9 @@ export default class Auth {
   }
 
   handleAuthentication() {
-    console.log("handle auth");
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        //history.replace('/vault');
       } else if (err) {
         window.location.href = "/";
         console.log(err);
@@ -53,7 +51,6 @@ export default class Auth {
   }
 
   setSession(authResult) {
-    console.log("session setup");
     // Set the time that the access token will expire at
     let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
