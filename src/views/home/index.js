@@ -6,6 +6,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import LockIcon from 'react-icons/lib/md/lock-outline';
 import CouchImg from '../../images/couchbase.png';
 import Footer from '../../shared/footer';
+import ReactLogo from '../../images/ReactLogo.svg';
 
 const auth = new Auth();
 
@@ -114,7 +115,7 @@ export default class Home extends React.Component {
       <div style={styles.home}>
         <div style={styles.titleSection}>
           <div style={styles.titleInner}>
-            <img style={styles.reactImg} alt="" src="http://www.reactrally.com/assets/dist/img/ReactLogo.svg"/>
+            <img style={styles.reactImg} alt="" src={ReactLogo}/>
             <h1 style={styles.title}>ReactPM</h1>
             <h2 style={styles.subtitle}>A simple Password Manager built using React, Auth0 and Google's Material Design</h2>
             <RaisedButton primary={true} label="Login" style={styles.signInButton} onClick={this.login.bind(this)} />
