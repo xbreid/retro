@@ -45,7 +45,6 @@ export default class Vault extends React.Component {
   }
 
   componentDidMount() {
-    this.getAuthStatus();
     this.setState({ profile: {} });
     const { userProfile, getProfile } = auth;
     if (!userProfile) {
@@ -102,24 +101,8 @@ export default class Vault extends React.Component {
       vault: vault,
       docId: this.state.docId
     }, { headers: { Authorization: `Bearer ${getAccessToken()}` }})
-      .then(function (response) {
-        console.log(response);
-      })
       .catch(function (error) {
         console.log(error);
-      });
-  }
-
-  getAuthStatus() {
-    axios.get('api/authorized', {
-      headers: { Authorization: `Bearer ${getAccessToken()}` }
-    })
-      .then(function(response) {
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.statusText);
-        console.log(response.headers);
-        console.log(response.config);
       });
   }
 
